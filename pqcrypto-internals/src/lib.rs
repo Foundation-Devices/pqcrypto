@@ -1,4 +1,5 @@
 #![no_std]
+#![feature(c_size_t)]
 
 use core::slice;
 
@@ -16,7 +17,10 @@ use core::slice;
 /// }
 /// ```
 #[no_mangle]
-pub unsafe extern "C" fn PQCRYPTO_RUST_randombytes(buf: *mut u8, len: libc::size_t) -> libc::c_int {
+pub unsafe extern "C" fn PQCRYPTO_RUST_randombytes(
+    buf: *mut u8,
+    len: core::ffi::c_size_t,
+) -> core::ffi::c_int {
     let buf = slice::from_raw_parts_mut(buf, len);
     getrandom::getrandom(buf).expect("RNG Failed");
     0
